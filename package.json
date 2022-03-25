@@ -1,0 +1,50 @@
+{
+  "name": "homebridge-tplink-accesspoint",
+  "version": "0.5.0",
+  "description": "Exposes TP-Link WIFI Access Point to Homebridge",
+  "main": "dist/tplink-platform.js",
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "build": "rimraf ./dist && tsc",
+    "prepublishOnly": "npm run build",
+    "postpublish": "npm run clean",
+    "watch": "npm run build && npm link && nodemon",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tobias Kamber <tobias@software-atelier.ch>",
+  "engines": {
+    "homebridge": ">=1.0.0"
+  },
+  "keywords": [
+    "homebridge-plugin"
+  ],
+  "license": "ISC",
+  "files": [
+    "LICENSE",
+    "dist"
+  ],
+  "funding":{
+    "type": "paypal",
+    "url:": "https://www.paypal.com/paypalme/softwareatelierk"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/software-atelier/homebridge-tplink-accesspoint.git"
+  },
+  "bugs": {
+    "url": "https://github.com/software-atelier/homebridge-tplink-accesspoint/issues"
+  },
+  "devDependencies": {
+    "@types/node": "10.17.19",
+    "homebridge": "^1.0.4",
+    "nodemon": "^2.0.13",
+    "rimraf": "^3.0.2",
+    "typescript": "^3.9.10"
+  },
+  "dependencies": {
+    "@homebridge/plugin-ui-utils": "^0.0.19",
+    "axios": "^0.26.1",
+    "node-fetch": "^3.2.3",
+    "ts-md5": "^1.2.11"
+  }
+}

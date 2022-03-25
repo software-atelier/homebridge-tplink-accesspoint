@@ -1,0 +1,66 @@
+{
+  "pluginAlias": "TP-Link Access Point",
+  "pluginType": "platform",
+  "singular": true,
+  "customUi": true,
+  "schema": {
+    "properties": {
+      "ip": {
+        "title": "IP Address",
+        "type": "string",
+        "required": true
+      },
+      "user": {
+        "title": "Username",
+        "type": "string",
+        "required": true
+      },
+      "pass": {
+        "title": "Password",
+        "type": "string",
+        "required": true
+      },
+      "clients": {
+        "type": "array",
+        "required": true,
+        "items": {
+          "title": "Clients",
+          "type": "object",
+          "properties": {
+            "name": {
+              "title": "Name",
+              "type": "string",
+              "required": true
+            },
+            "mac": {
+              "title": "MAC Address",
+              "type": "string",
+              "required": true
+            },
+            "ip": {
+              "title": "IP Address",
+              "type": "string",
+              "required": true
+            },
+            "identifier": {
+              "title": "Identifier Field",
+              "type": "string",
+              "required": true,
+              "default": "mac",
+              "oneOf": [
+                { "title": "MAC Address", "enum": ["mac"] },
+                { "title": "IP Address", "enum": ["ip"] },
+                { "title": "Name", "enum": ["name"] }
+              ]
+            },
+            "enabled": {
+              "title": "Enabled",
+              "type": "boolean",
+              "required": true
+            }
+          }
+        }
+      }
+    }
+  }
+}

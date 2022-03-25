@@ -1,0 +1,168 @@
+<div class="card card-body">
+    <form id="configForm">
+        <div class="form-group">
+            <label for="ipInput">IP Adress</label>
+            <input type="text" class="form-control" id="ipInput" required>
+        </div>
+        <div class="form-group">
+            <label for="userNameInput">Username</label>
+            <input type="text" class="form-control" id="userNameInput" required>
+        </div>
+        <div class="form-group">
+            <label for="passwordInput">Password</label>
+            <input type="password" class="form-control" id="passwordInput" required>
+        </div>
+        <div class="text-center">
+            <button id="getClients" type="button" class="btn btn-primary">Load Clients</button>
+        </div>
+    </form>
+</div>
+
+<div class="card card-body">
+    <div class="container" id="clients" style="width: 560px"> <!-- setting width prevents flickering after loading data -->
+    </div>
+</div>
+
+<script>
+
+    function setupCheckbox(client, pluginConfig){
+        var checkbox = document.createElement('input');
+        checkbox.setAttribute('type','checkbox');
+        if (client.enabled){
+            checkbox.setAttribute('checked','true');
+        }
+        checkbox.onclick = function(e){
+            client.enabled = checkbox.checked;
+            console.log(checkbox.checked);
+            homebridge.updatePluginConfig(pluginConfig);
+        };
+        return checkbox;
+    }
+
+    function setupSelect(client, pluginConfig){
+        var select = document.createElement('select');
+        select.setAttribute('class','custom-select');
+        var option1 = document.createElement('option');
+        option1.setAttribute("value","mac");
+        option1.innerText = "MAC Address";
+        var option2 = document.createElement('option');
+        option2.setAttribute("value","ip");
+        option2.innerText = "IP Address";
+        var option3 = document.createElement('option');
+        option3.setAttribute("value","name");
+        option3.innerText = "Device Name";
+        if (client.identifier == "mac") option1.setAttribute("selected","true");
+        else if (client.identifier == "ip") option2.setAttribute("selected","true");
+        else if (client.identifier == "name") option3.setAttribute("selected","true");
+        select.appendChild(option1);
+        select.appendChild(option2);
+        select.appendChild(option3);
+
+        select.onchange = function(e){
+            client.identifier = select.value;
+            console.log(select.value);
+            homebridge.updatePluginConfig(pluginConfig);
+        }
+        return select;
+    }
+
+    function createElement(client, pluginConfig){
+
+        var container = document.getElementById('clients');
+        var row = document.createElement('div');
+        row.setAttribute('class','row');
+        container.appendChild(row);
+
+        // <input type="checkbox" className="form-check-input" id="exampleCheck1">
+        var checkbox = setupCheckbox(client, pluginConfig);
+
+        var column0 = document.createElement('div');
+        column0.setAttribute('class','col');
+        column0.appendChild(checkbox);
+
+        var column1 = document.createElement('div');
+        column1.setAttribute('class','col-3');
+        column1.innerText = client.mac;
+        var column2 = document.createElement('div');
+        column2.setAttribute('class','col-3');
+        column2.innerText = client.name;
+        var column3 = document.createElement('div');
+        column3.setAttribute('class','col-3');
+        column3.innerText = client.ip;
+
+        var column4 = document.createElement('div');
+        column4.setAttribute('class','col-2');
+
+        var select = setupSelect(client,pluginConfig);
+
+        column4.appendChild(select);
+
+        row.appendChild(column0);
+        row.appendChild(column1);
+        row.appendChild(column2);
+        row.appendChild(column3);
+        row.appendChild(column4);
+    }
+
+    (async () => {
+        const pluginConfig = await homebridge.getPluginConfig();
+        console.log(pluginConfig.length);
+        if (pluginConfig.length) {
+            document.querySelector('#userNameInput').value = pluginConfig[0].user;
+            document.querySelector('#passwordInput').value = pluginConfig[0].pass;
+            document.querySelector('#ipInput').value = pluginConfig[0].ip;
+            document.getElementById('clients').innerHTML = "";
+            for (let item of pluginConfig[0].clients) {
+                createElement(item, pluginConfig);
+                console.log(item);
+            }
+        } else {
+            pluginConfig.push({});
+        }
+
+        // watch for changes to the form and update the config
+        document.getElementById('configForm').addEventListener('input', () => {
+            // get the current values from the form
+            pluginConfig[0].user = document.querySelector('#userNameInput').value;
+            pluginConfig[0].pass = document.querySelector('#passwordInput').value;
+            pluginConfig[0].ip = document.querySelector('#ipInput').value;
+            console.log('configForm');
+            // update the config
+            homebridge.updatePluginConfig(pluginConfig);
+        });
+
+        document.querySelector('#getClients').addEventListener('click', async () => {
+            // validate a username was provided
+            const username = document.querySelector('#userNameInput').value;
+            const password = document.querySelector('#passwordInput').value;
+            const ip = document.querySelector('#ipInput').value;
+            if (!username || !password || !ip) {
+                // create a error / red toast notification if the required input is not provided.
+                homebridge.toast.error('Server Credentials must be provided', 'Error');
+                return;
+            }
+
+            // starting the request, show the loading spinner
+            homebridge.showSpinner();
+
+            try {
+                const response = await homebridge.request('/clients', pluginConfig[0]);
+                document.getElementById('clients').innerHTML = "";
+                for (let item of response) {
+                    createElement(item);
+                    console.log(item);
+                }
+                pluginConfig[0].clients = response
+                homebridge.updatePluginConfig(pluginConfig);
+                homebridge.toast.success('Got Devices!', 'Success');
+            } catch (e) {
+                homebridge.toast.error(e.error, e.message);
+            } finally {
+                // remember to un-hide the spinner
+                homebridge.hideSpinner();
+            }
+        });
+
+    })();
+
+</script>
