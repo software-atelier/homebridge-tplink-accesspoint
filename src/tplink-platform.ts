@@ -159,12 +159,12 @@ class ExampleDynamicPlatform implements DynamicPlatformPlugin {
 
   private updateAccessoryStates(gridItems: WifiGridItem[]){
     this.uuidToAccessory.forEach((accessory) => {
-      this.log("updating "+accessory.displayName+" "+this.isKnownInGrid(accessory,gridItems));
         this.setOccupancySensor(accessory, this.isKnownInGrid(accessory,gridItems));
     })
   }
 
   private setOccupancySensor(accessory: PlatformAccessory, value: boolean) {
+    //this.log("Updating "+accessory.displayName+" "+value);
     accessory.getService(hap.Service.OccupancySensor)?.setCharacteristic(Characteristic.OccupancyDetected, value);
   }
 
@@ -195,7 +195,7 @@ class ExampleDynamicPlatform implements DynamicPlatformPlugin {
     let remove: string[] = [];
     this.uuidToAccessory.forEach((accessory, key) => {
       if (!this.getClientConfigFromAccessory(accessory)?.enabled){
-        this.log.info("Removing accessorie");
+        this.log.info("Removing accessory");
         this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
         remove.push(key);
       }

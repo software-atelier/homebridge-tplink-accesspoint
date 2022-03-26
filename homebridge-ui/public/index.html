@@ -33,7 +33,6 @@
         }
         checkbox.onclick = function(e){
             client.enabled = checkbox.checked;
-            console.log(checkbox.checked);
             homebridge.updatePluginConfig(pluginConfig);
         };
         return checkbox;
@@ -60,7 +59,6 @@
 
         select.onchange = function(e){
             client.identifier = select.value;
-            console.log(select.value);
             homebridge.updatePluginConfig(pluginConfig);
         }
         return select;
@@ -106,7 +104,6 @@
 
     (async () => {
         const pluginConfig = await homebridge.getPluginConfig();
-        console.log(pluginConfig.length);
         if (pluginConfig.length) {
             document.querySelector('#userNameInput').value = pluginConfig[0].user;
             document.querySelector('#passwordInput').value = pluginConfig[0].pass;
@@ -114,7 +111,6 @@
             document.getElementById('clients').innerHTML = "";
             for (let item of pluginConfig[0].clients) {
                 createElement(item, pluginConfig);
-                console.log(item);
             }
         } else {
             pluginConfig.push({});
@@ -126,7 +122,6 @@
             pluginConfig[0].user = document.querySelector('#userNameInput').value;
             pluginConfig[0].pass = document.querySelector('#passwordInput').value;
             pluginConfig[0].ip = document.querySelector('#ipInput').value;
-            console.log('configForm');
             // update the config
             homebridge.updatePluginConfig(pluginConfig);
         });
@@ -149,8 +144,7 @@
                 const response = await homebridge.request('/clients', pluginConfig[0]);
                 document.getElementById('clients').innerHTML = "";
                 for (let item of response) {
-                    createElement(item);
-                    console.log(item);
+                    createElement(item, pluginConfig);
                 }
                 pluginConfig[0].clients = response
                 homebridge.updatePluginConfig(pluginConfig);

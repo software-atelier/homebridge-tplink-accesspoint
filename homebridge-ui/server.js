@@ -40,7 +40,6 @@ class PluginUiServer extends HomebridgePluginUiServer {
             }
 
             for (let gridItem of data.data.wirelessGrid){
-                console.log(gridItem);
                 if (result.filter(client => this.isSame(gridItem, client)).length == 0){
                     result.push({
                         name: gridItem.name,

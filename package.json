@@ -16,7 +16,11 @@
     "homebridge": ">=1.0.0"
   },
   "keywords": [
-    "homebridge-plugin"
+    "homebridge-plugin",
+    "homebridge",
+    "tp-link",
+    "homeautomation",
+    "smarthome"
   ],
   "license": "ISC",
   "files": [
