@@ -11,7 +11,7 @@ Access Point Clients can be configured as Occupancy Sensors.
 
 # Configuration
 ## User Interface
-![](/Users/tk/src/homebridge-tplink-accesspoint/img/UI.png)
+![](img/UI.png)
 
 A) The Access Points IP Adress
 
