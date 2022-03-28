@@ -1,18 +1,19 @@
 import {
   API,
-  APIEvent, Characteristic,
+  APIEvent,
   DynamicPlatformPlugin,
   HAP,
   Logging,
   PlatformAccessory,
   PlatformAccessoryEvent,
-  PlatformConfig,
+  PlatformConfig
 } from "homebridge";
+import {Characteristic} from "hap-nodejs"
 
 import {DataLoader, WifiGridItem} from './dataLoader'
 import {Client, WiFiConfig} from "./config";
 const PLUGIN_NAME = "homebridge-tplink-accesspoint";
-const PLATFORM_NAME = "TP-Link Access Point";
+const PLATFORM_NAME = "TPLinkAccessPoint";
 
 let hap: HAP;
 let Accessory: typeof PlatformAccessory;
@@ -39,8 +40,6 @@ class ExampleDynamicPlatform implements DynamicPlatformPlugin {
     this.wifiConfig = config as WiFiConfig;
     this.dataLoader = new DataLoader(this.wifiConfig.ip, this.wifiConfig.user, this.wifiConfig.pass);
     this.uuidToAccessory = new Map<string, PlatformAccessory>();
-
-    // probably parse config or something here
 
     log.info("Initializing Access Point Plugin");
 

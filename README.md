@@ -68,6 +68,12 @@ In this case it is recommended to use another field for for identification. If y
         }
 ```
 
-`identifier`: `mac` | `ip` | `name`. For Details, see [here](#identifier)
+`identifier`: `mac` | `ip` | `name`. For Details, see [here (User interface)](#identifier)
 
 
+## Troubleshooting
+In case the plugin can not start because of missing hap-nodejs, install hap-nodejs in the terminal:
+
+```bash
+sudo npm install -g --unsafe-perm hap-nodejs@latest
+```

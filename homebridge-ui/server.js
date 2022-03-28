@@ -1,5 +1,4 @@
 const { HomebridgePluginUiServer, RequestError } = require('@homebridge/plugin-ui-utils');
-const { createHash } = require('crypto');
 const {DataLoader} = require('../dist/dataLoader')
 
 class PluginUiServer extends HomebridgePluginUiServer {
@@ -30,10 +29,8 @@ class PluginUiServer extends HomebridgePluginUiServer {
     async loadClients(payload) {
         try {
             var dataLoader = new DataLoader(payload.ip, payload.user, payload.pass);
-
             var data = await dataLoader.load();
-
-            // return data to the ui
+            if (!payload.clients) payload.clients = [];
             const result = [];
             for (let client of payload.clients){
                 result.push(client);
